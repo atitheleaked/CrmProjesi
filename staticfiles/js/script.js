@@ -10,6 +10,8 @@ $(document).ready(function(){
     })
 })
 */
+var src = "http://maps.googleapis.com/maps/api/js?libraries=geometry&sensor=false&key=AIzaSyCWSUlUYOtvj6AjAMvBE3XacynYkke_ZVc&callback=initMap"
+
 $('#alici').change(function(){
     $('.ui-helper-hidden-accessible').css('display','none')
 })
@@ -151,6 +153,33 @@ $('#kurulusAjaxFiltreleme  input').keyup(function(){
             kurulusTuru:$kurulusTuru,
             kurulusDurumu:$kurulusDurumu,
 
+            csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+        },
+        success: function(data){
+            $('#ajaxYukleme').html(data)
+        },
+        error: function(){
+            alert('birşeyler hatalı!');
+        }
+    });
+})
+
+$('#mesajlarAjaxFiltreleme  input').change(function(){
+    $mesajOkunduAra = $('#mesajOkunduAra').val()
+    if ($('#mesajOkunduAra').is(':checked'))
+    {
+        $mesajOkunduAra = 'Evet'
+    }
+    else{
+        $mesajOkunduAra = 'Hayır'
+    }
+    console.log($mesajOkunduAra)
+    $.ajax({
+        url: '',
+        type: 'POST',
+        async: false,
+        data:{
+            mesajOkunduAra: $mesajOkunduAra,
             csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
         },
         success: function(data){
