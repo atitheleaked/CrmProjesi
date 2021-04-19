@@ -1,0 +1,52 @@
+{% extends "layout.html" %}
+
+
+
+
+{% block body %}
+
+<div class="ContentLayout">
+    <div class="Pagination">
+        <h1>Sağlık Kuruluşları</h1>
+    </div>
+    <div class="SubContent">
+        <div class="tablo">
+
+            <table>
+                <thead>
+                    <tr>
+                        <td>ID</td>
+                        <td>Personel Adı</td>
+                        <td>Personel Soyad</td>
+                        <td>Personel Mail</td>
+                        <td>Personel Telefon</td>
+                        <td>Personel Seviye</td>
+                    </tr>
+
+                </thead>
+                <tbody>
+
+                    {% for personel in personeller %}
+                    <tr>
+                        <td>{{personel.id}}</td>
+                        <td>{{personel.ad}}</td>
+                        <td>{{personel.soyad}}</td>
+                        <td>{{personel.mail}}</td>
+                        <td>{{personel.telefon}}</td>
+                        <td>{{personel.seviye}}</td>
+                        <td><a href="{% url 'base:personelDuzenle' personel.id %}" class = "btn-update">Güncelle</a></td>
+                        <td><a href="{% url 'base:personelSil' personel.id %}" class = "btn-delete">Sil</a> </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+
+{% endblock body %}

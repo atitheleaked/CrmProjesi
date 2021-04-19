@@ -1,0 +1,19 @@
+{% load static %}
+
+{% for k in klist %}
+    <hr>
+    <button class="ReceiverSelect">{{k.username}}</button>
+    <hr>
+{% endfor %}
+
+<script>
+    $('.ReceiverSelect').click(function(){
+    $ReceiverUsername = $(this).text();
+    console.log($ReceiverUsername)
+    $('#ReceiverFinal').text($ReceiverUsername);
+})
+
+</script>
+
+    
+

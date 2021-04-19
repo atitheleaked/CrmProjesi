@@ -1,0 +1,48 @@
+{% extends "layout.html" %}
+
+
+
+
+{% block body %}
+
+<div class="ContentLayout">
+    <div class="Pagination">
+        <h1>Sağlık Kuruluşları</h1>
+    </div>
+    <div class="SubContent">
+        <div class="tablo">
+
+            <table>
+                <thead>
+                    <tr>
+                        <td>Not ID</td>
+                        <td>Personel</td>
+                        <td>Not Tür</td>
+                        <td>Tarih</td>
+                    </tr>
+
+                </thead>
+                <tbody>
+
+                    {% for not in notlar %}
+                    <tr>
+                        <td>{{not.id}}</td>
+                        <td>{{not.personelID}}</td>
+                        <td>{{not.notTur}}</td>
+                        <td>{{not.eklenmeTarihi}}</td>
+                        <td><a href="{% url 'base:notlarDuzenle' not.id %}" class = "btn-update">Güncelle</a></td>
+                        <td><a href="{% url 'base:notlarSil' not.id %}" class = "btn-delete">Sil</a> </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+
+{% endblock body %}

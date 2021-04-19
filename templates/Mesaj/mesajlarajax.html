@@ -1,0 +1,19 @@
+
+
+{% for mesaj in mesajlarHepsi %}
+<tr>
+    <td><a href="">{{mesaj.gonderen}}</a></td>
+    <td style="min-width: 466px;"><a href="" >{{mesaj.mesaj}}</a></td>
+    <td>{{mesaj.eklenmeTarihi}}</td>
+    
+    <!--
+    {% if mesaj.okundu == True %}
+    <td>Okunmuş</td>
+    {% else %}
+    <td>Okunmamış</td>
+    {% endif %}
+    -->
+        
+    
+</tr>
+{% endfor %}

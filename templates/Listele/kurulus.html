@@ -1,0 +1,52 @@
+{% extends "layout.html" %}
+
+
+
+
+{% block body %}
+{% csrf_token %}
+
+<div class="ContentLayout">
+    <div class="Pagination">
+        <h1>Sağlık Kuruluşları</h1>
+    </div>
+    <div class="SubContent">
+        <div class="tablo">
+            <table>
+                <thead>
+                    <tr>
+                        <td>Kuruluş ID</td>
+                        <td>Kuruluş Adı</td>
+                        <td>Kuruluş Türü</td>
+                        <td>Kuruluş Durumu</td>
+                        <td></td>
+                        <td></td>
+            
+                    </tr>
+                    <tr id="kurulusAjaxFiltreleme">
+                        <td><input style="padding: 5px;" type="text" id="kurulusIDAra" placeholder="Aranacak"></td>
+                        <td><input style="padding: 5px;" type="text" id="kurulusAdiAra" placeholder="Aranacak"></td>
+                        <td><input style="padding: 5px;" type="text" id="kurulusTuruAra" placeholder="Aranacak"></td>
+                        <td><input style="padding: 5px;" type="text" id="kurulusDurumuAra" placeholder="Aranacak"></td>
+                        <td>Deaktif</td>
+            
+                    </tr>
+            
+                </thead>
+                <tbody id="ajaxYukleme">
+                    {% include 'Listele/ajaxListeleme/kurulus.html' %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+{% endblock body %}

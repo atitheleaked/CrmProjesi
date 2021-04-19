@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <script src="{% static 'fontawesome_free/js/all.min.js' %}"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+
+    <title>Sağlık Turizmi</title>
+</head>
+
+<body>
+     <!--MESAJ - UYARI - BİLGİLENDİRME BALONU-->
+    {% if messages %}
+                <div id="BilgilendirmeBalonu" >
+                    {% for message in messages %}
+                    {% if message.tags == "info" %}
+                    <div class="alert alert-danger">{{ message }}</div>
+                    {% else %}
+                    <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+                {% endif %}
+    <div id="Layout">
+        <div id="SideMenu">
+            <div id="Logo">
+                <h1>Logo</h1>
+            </div>
+            <ul>
+
+
+                <!-- GİRİŞ PANELİ -->
+                <li class="treeview">
+                    <a href="{% url 'user:login' %}">
+                        <i class="fa fa-sign-in-alt"></i>
+                        <span>Giriş Paneli</span>
+
+                    </a>
+                </li>
+
+
+                <!-- MESAJLAR -->
+                <li class="treeview">
+                    <a href="#">
+                        <i class="fa fa-user-shield" ></i>
+                        <span>Mesajlar</span>
+                        <div class="pull-right">
+                            <i class="fa fa-angle-left"></i>
+                        </div>
+                    </a>
+                    <ul class="treeview-menu" style="display: none;">
+                        <li><a href="{% url 'base:mesajListele' %}"><i class="fa fa-arrow-right"></i>Gelen Kutusu</a></li>
+                        <li><a href="{% url 'base:mesajYeni' %}"><i class="fa fa-arrow-right"></i>Mesaj Gönder</a></li>
+
+
+                    </ul>
+                </li>
+
+
+                <!-- YÖNETİCİ -->
+                <li class="treeview">
+                    <a class="ignore-click"  href="#">
+                        <i class="fa fa-user-shield"></i>
+                        <span>Yönetici</span>
+                        <div class="pull-right">
+                            <i class="fa fa-angle-left"></i>
+                        </div>
+                    </a>
+                    <ul class="treeview-menu" style="display: none;">
+                        <li><a href="#"><i class="fa fa-arrow-right"></i>Yönetici Görevi</a></li>
+                        <li><a href="#"><i class="fa fa-arrow-right"></i>Yönetici Görevi</a></li>
+                        <li><a href="#"><i class="fa fa-arrow-right"></i>Yönetici Görevi</a></li>
+
+                    </ul>
+                </li>
+
+
+                <!-- FİRMALAR -->
+                <li class="treeview">
+                    <a href="#">
+                        <i class="fa fa-home" ></i>
+                        <span>Firmalar</span>
+                        <div class="pull-right">
+                            <i class="fa fa-angle-left"></i>
+                        </div>
+                    </a>
+                    <ul class="treeview-menu" style="display: none;">
+                        <li><a href="{% url 'base:kurulusListele' %}"><i class="fa fa-arrow-right"></i>Kuruluşlar</a></li>
+                        <li><a href="{% url 'base:kurulusEkle' %}"><i class="fa fa-arrow-right"></i>Kuruluş Ekle</a></li>
+                        <li><a href="{% url 'base:kurulusHarita' %}"><i class="fa fa-arrow-right"></i>Kuruluş Haritası</a></li>
+
+
+                    </ul>
+                </li>
+
+                <!-- KİŞİLER -->
+                <li class="treeview">
+                    <a class="ignore-click" href="#">
+                        <i class="fa fa-users"></i>
+                        <span>Kişiler</span>
+                        <div class="pull-right">
+                            <i class="fa fa-angle-left"></i>
+                        </div>
+                    </a>
+                    <ul class="treeview-menu" style="display: none;">
+                        <li><a href="{% url 'base:kisilerListele' %}"><i class="fa fa-arrow-right"></i>Kişiler
+                                Listele</a></li>
+                        <li><a href="{% url 'base:kisilerEkle' %}"><i class="fa fa-arrow-right"></i>Kişi Ekle</a></li>
+
+
+                    </ul>
+                </li>
+
+                <!-- SAĞLIK KİŞİLER-->
+                <li class="treeview">
+                    <a class="ignore-click" href="#">
+                        <i class="fa fa-user-friends"></i>
+                        <span>Sağlık Kişiler</span>
+                        <div class="pull-right">
+                            <i class="fa fa-angle-left"></i>
+                        </div>
+                    </a>
+                    <ul class="treeview-menu" style="display: none;">
+                        <li><a href="{% url 'base:saglikKisilerListele' %}"><i class="fa fa-arrow-right"></i>Sağlık
+                                Kişiler Listele</a></li>
+                        <li><a href="{% url 'base:saglikKisilerEkle' %}"><i class="fa fa-arrow-right"></i>Sağlık
+                                Kişiler Ekle </a></li>
+
+
+                    </ul>
+                </li>
+
+                <!-- UZMANLIK -->
+                <li class="treeview">
+                    <a class="ignore-click" href="#">
+                        <i class="fa fa-flask"></i>
+                        <span>Uzmanlık</span>
+                        <div class="pull-right">
+                            <i class="fa fa-angle-left"></i>
+                        </div>
+                    </a>
+                    <ul class="treeview-menu" style="display: none;">
+                        <li><a href="{% url 'base:uzmanliklarListele' %}"><i class="fa fa-arrow-right"></i>Uzmanlık
+                                Listele</a></li>
+                        <li><a href="{% url 'base:uzmanliklarEkle' %}"><i class="fa fa-arrow-right"></i>Uzmanlık
+                                Ekle</a></li>
+
+                    </ul>
+                </li>
+
+                <!-- TEDAVİLER -->
+                <li class="treeview">
+                    <a class="ignore-click" href="#">
+                        <i class="fa fa-vial"></i>
+                        <span>Tedaviler</span>
+                        <div class="pull-right">
+                            <i class="fa fa-angle-left"></i>
+                        </div>
+                    </a>
+                    <ul class="treeview-menu" style="display: none;">
+                        <li><a href="{% url 'base:tedavilerListele' %}"><i class="fa fa-arrow-right"></i>Tedaviler
+                                Listele</a></li>
+                        <li><a href="{% url 'base:tedavilerEkle' %}"><i class="fa fa-arrow-right"></i>Tedaviler Ekle</a>
+                        </li>
+
+
+                    </ul>
+                </li>
+
+                <!-- SAĞLIK TEDAVİLER -->
+                <li  class="treeview">
+                    <a class="ignore-click" href="#">
+                        <i class="fa fa-vials"></i>
+                        <span>Sağlık Tedaviler</span>
+                        <div class="pull-right">
+                            <i class="fa fa-angle-left"></i>
+                        </div>
+                    </a>
+                    <ul class="treeview-menu" style="display: none;">
+                        <li><a href="{% url 'base:saglikTedavilerListele' %}"><i class="fa fa-arrow-right"></i>S.
+                                Tedaviler Listele</a></li>
+                        <li><a href="{% url 'base:saglikTedavilerEkle' %}"><i class="fa fa-arrow-right"></i>S. Tedaviler
+                                Ekle</a></li>
+
+
+                    </ul>
+                </li>
+
+                <!-- SEVİYELER -->
+                <li class="treeview">
+                    <a class="ignore-click" href="#">
+                        <i class="fa fa-layer-group"></i>
+                        <span>Seviyeler</span>
+                        <div class="pull-right">
+                            <i class="fa fa-angle-left"></i>
+                        </div>
+                    </a>
+                    <ul class="treeview-menu" style="display: none;">
+                        <li><a href="{% url 'base:seviyelerListele' %}"><i class="fa fa-arrow-right"></i>Seviyeler
+                                Listele</a></li>
+                        <li><a href="{% url 'base:seviyelerEkle' %}"><i class="fa fa-arrow-right"></i>Seviyeler Ekle</a>
+                        </li>
+
+
+                    </ul>
+                </li>
+
+                <!-- PERSONELLER -->
+                <li class="treeview">
+                    <a class="ignore-click" href="#">
+                        <i class="fa fa-user-tie"></i>
+                        <span>Personeller</span>
+                        <div class="pull-right">
+                            <i class="fa fa-angle-left"></i>
+                        </div>
+                    </a>
+                    <ul class="treeview-menu" style="display: none;">
+                        <li><a href="{% url 'base:personelListele' %}"><i class="fa fa-arrow-right"></i>Personeller
+                                Listele</a></li>
+                        <li><a href="{% url 'base:personelEkle' %}"><i class="fa fa-arrow-right"></i>Personeller
+                                Ekle</a></li>
+
+
+                    </ul>
+                </li>
+
+                <!-- NOTLAR -->
+                <li class="treeview">
+                    <a class="ignore-click" href="#">
+                        <i class="fa fa-clipboard"></i>
+                        <span>Notlar</span>
+                        <div class="pull-right">
+                            <i class="fa fa-angle-left"></i>
+                        </div>
+                    </a>
+                    <ul class="treeview-menu" style="display: none;">
+                        <li><a href="{% url 'base:notlarListele' %}"><i class="fa fa-arrow-right"></i>Notlar Listele</a>
+                        </li>
+                        <li><a href="{% url 'base:notlarEkle' %}"><i class="fa fa-arrow-right"></i>Notlar Ekle</a></li>
+
+
+                    </ul>
+                </li>
+
+                <!-- KİŞİ NOTLAR -->
+                <li class="treeview">
+                    <a class="ignore-click" href="#">
+                        <i class="fa fa-clipboard"></i>
+                        <span>Kişi Notlar</span>
+                        <div class="pull-right">
+                            <i class="fa fa-angle-left"></i>
+                        </div>
+                    </a>
+                    <ul class="treeview-menu" style="display: none;">
+                        <li><a href="{% url 'base:kisiNotlarListele' %}"><i class="fa fa-arrow-right"></i>Kişi Notlar
+                                Listele</a></li>
+                        <li><a href="{% url 'base:kisiNotlarEkle' %}"><i class="fa fa-arrow-right"></i>Kişi Notlar
+                                Ekle</a></li>
+
+
+                    </ul>
+                </li>
+
+                <!-- SAĞLIK NOTLAR -->
+                <li class="treeview">
+                    <a class="ignore-click" href="#">
+                        <i class="fa fa-clipboard"></i>
+                        <span>Sağlık Notlar</span>
+                        <div class="pull-right">
+                            <i class="fa fa-angle-left"></i>
+                        </div>
+                    </a>
+                    <ul class="treeview-menu" style="display: none;">
+                        <li><a href="{% url 'base:saglikNotlarListele' %}"><i class="fa fa-arrow-right"></i>Sağlık
+                                Notlar Listele</a></li>
+                        <li><a href="{% url 'base:saglikNotlarEkle' %}"><i class="fa fa-arrow-right"></i>Sağlık Notlar
+                                Ekle</a></li>
+
+
+                    </ul>
+                </li>
+
+                <!-- PERSONEL SAĞLIK -->
+                <li class="treeview">
+                    <a class="ignore-click" href="#">
+                        <i class="fa fa-clipboard"></i>
+                        <span>Personel Sağlık</span>
+                        <div class="pull-right">
+                            <i class="fa fa-angle-left"></i>
+                        </div>
+                    </a>
+                    <ul class="treeview-menu" style="display: none;">
+                        <li><a href="{% url 'base:personelSaglikListele' %}"><i class="fa fa-arrow-right"></i>Personel
+                                Sağlık Listele</a></li>
+                        <li><a href="{% url 'base:personelSaglikEkle' %}"><i class="fa fa-arrow-right"></i>Personel
+                                Sağlık Ekle</a></li>
+
+
+                    </ul>
+                </li>
+
+                <!-- SAĞLIK HİZMET -->
+                <li class="treeview">
+                    <a class="ignore-click" href="#">
+                        <i class="fa fa-vials"></i>
+                        <span>Sağlık Hizmet</span>
+                        <div class="pull-right">
+                            <i class="fa fa-angle-left"></i>
+                        </div>
+                    </a>
+                    <ul class="treeview-menu" style="display: none;">
+                        <li><a href="{% url 'base:saglikHizmetListele' %}"><i class="fa fa-arrow-right"></i>Sağlık
+                                Hizmetleri</a></li>
+                        <li><a href="{% url 'base:saglikHizmetEkle' %}"><i class="fa fa-arrow-right"></i>Sağlık Hizmeti
+                                Ekle</a></li>
+
+
+                    </ul>
+                </li>
+
+                <!-- HİZMETLER -->
+                <li class="treeview">
+                    <a class="ignore-click" href="#">
+                        <i class="fa fa-concierge-bell"></i>
+                        <span>Hizmetler</span>
+                        <div class="pull-right">
+                            <i class="fa fa-angle-left"></i>
+                        </div>
+                    </a>
+                    <ul class="treeview-menu" style="display: none;">
+                        <li><a href="{% url 'base:hizmetListele' %}"><i class="fa fa-arrow-right"></i>Hizmetler</a></li>
+                        <li><a href="{% url 'base:hizmetEkle' %}"><i class="fa fa-arrow-right"></i>Hizmet Ekle</a></li>
+
+
+                    </ul>
+                </li>
+
+
+            </ul>
+
+        </div>
+        <main id="MainSide">
+            <div id="TopMenu">
+
+               
+                
+                
+                <p id="HideSideNav"><i style="height: 30px;width: 30px;" class="fa fa-chevron-circle-left"></i></p>
+                
+                <ul>
+
+                    <!-- KULLANICI -->
+                    <li style="margin-left: 15px;"><a href="">{{request.user.username}}</a></li>
+
+                    <!-- AYARLAR -->
+                    <li><a href="#"><i style="height: 20px;width: 20px;" class="fa fa-cog"></i><span>2</span></a>
+                        <ul class="dropdown-menu" style="display: none;">
+                            <li><a href="">
+                                    <i class="fa fa-dot-circle" style="color: #009688;"></i>
+                                    UzunUyarı UzunUyarı UzunUyarı UzunUyarı UzunUyarı
+                                </a></li>
+                            <li><a href="">
+                                    <i class="fa fa-dot-circle" style="color: #009688;"></i>
+                                    UzunUyarı UzunUyarı UzunUyarı UzunUyarı UzunUyarı
+                                </a></li>
+                        </ul>
+                    </li>
+
+                    <!-- GÖREVLER -->
+                    <li><a href="#"><i style="height: 20px;width: 20px;" class="fa fa-clipboard"></i><span>2</span></a>
+                        <ul class="dropdown-menu" style="display: none;">
+                            <li><a href="">
+                                    <i class="fa fa-dot-circle" style="color: #009688;"></i>
+                                    UzunUyarı UzunUyarı UzunUyarı UzunUyarı UzunUyarı
+                                </a></li>
+                            <li><a href="">
+                                    <i class="fa fa-dot-circle" style="color: #009688;"></i>
+                                    UzunUyarı UzunUyarı UzunUyarı UzunUyarı UzunUyarı
+                                </a></li>
+                        </ul>
+                    </li>
+
+                    <!-- BİLDİRİMLER -->
+                    <li><a href="#"><i style="height: 20px;width: 20px;" class="fa fa-bell"></i><span>2</span></a>
+                        <ul class="dropdown-menu" style="display: none;">
+                            <li><a href="">
+                                    <i class="fa fa-dot-circle" style="color: #009688;"></i>
+                                    UzunUyarı UzunUyarı UzunUyarı UzunUyarı UzunUyarı
+                                </a></li>
+                            <li><a href="">
+                                    <i class="fa fa-dot-circle" style="color: #009688;"></i>
+                                    UzunUyarı UzunUyarı UzunUyarı UzunUyarı UzunUyarı
+                                </a></li>
+                        </ul>
+                    </li>
+                    
+                    <!-- MESAJLAR -->
+                    <li><a href="#"><i style="height: 20px;width: 20px;" class="fa fa-envelope"></i><span>{{mesajlarAdet}}</span></a>
+                        <ul class="dropdown-menu" style="display: none;">
+                            <li><p></p></li>
+                            {% if mesajlar %}
+                            {% for mesaj in mesajlar %}
+                            <li><a href="{% url 'base:mesajDetay' mesaj.id %}">
+                                    <i class="fa fa-dot-circle" style="color: #009688;"></i>
+                                    {{mesaj.mesaj}}
+                                    <span>Gönderen: {{mesaj.gonderen}}</span>
+                                </a></li>
+                            {% endfor %}
+                            {% endif %}
+                        </ul>
+                    </li>
+
+                </ul>
+
+            </div>
+            <div id="Content">
+                {% block body %}
+
+
+                {% endblock body %}
+            </div>
+        </main>
+    </div>
+    
+    <script src="{% static 'js/script.js' %}"></script>
+</body>
+
+</html>

@@ -1,0 +1,51 @@
+{% extends "layout.html" %}
+
+
+
+
+{% block body %}
+
+<div class="ContentLayout">
+    <div class="Pagination">
+        <h1>Sağlık Kuruluşları</h1>
+    </div>
+    <div class="SubContent">
+        <div class="tablo">
+
+            <table>
+                <thead>
+                    <tr>
+                        <td>Hizmet ID</td>
+                        <td>Kuruluş</td>
+                        <td>Hizmet Adı</td>
+                    </tr>
+
+                </thead>
+                <tbody>
+
+                    {% for hizmet in hizmetler %}
+                    <tr>
+                        <td>{{hizmet.id}}</td>
+                        <td>{{hizmet.SaglikHizmet}}</td>
+                        <td>{{hizmet.hizmetAdi}}</td>
+                        <td><a href="{% url 'base:hizmetDuzenle' hizmet.id %}" class = "btn-update">Güncelle</a></td>
+                        <td><a href="{% url 'base:hizmetSil' hizmet.id %}" class = "btn-delete">Sil</a> </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+
+            <p style="margin: 20px;">Kuruluşun id'si yerine adı çekiliyor, istenildiği takdirde id olarak
+                düzeltilebilir.</p>
+
+
+        </div>
+    </div>
+</div>
+
+
+
+
+
+{% endblock body %}

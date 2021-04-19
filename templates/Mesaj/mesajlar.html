@@ -1,0 +1,42 @@
+{% extends 'layout.html' %}
+
+
+{% block body %}
+
+{% csrf_token %}
+<div class="ContentLayout">
+    <div class="Pagination">
+        <h1>Inbox</h1>
+    </div>
+    <div class="SubContent">
+        
+    <div class="tablo">
+        <div id="mesajlarAjaxFiltreleme" style="padding:20px 0px 0px 20px">
+            <label for="mesajOkunduAra">Sadece Okunmayanlar</label>
+            <input style="margin-left: 10px;" type="checkbox" id="mesajOkunduAra" placeholder="Aranacak">
+
+        </div>
+        <table >
+            <thead>
+                <tr>
+                    <td>Gonderen</td>
+                    <td>Mesaj</td>
+                    <td>Gönderilme Tarihi</td>
+                </tr>
+        
+            </thead>
+            <tbody id="ajaxYukleme">
+                {% include 'Mesaj/mesajlarajax.html' %}
+            </tbody>
+        </table>
+    </div>
+        
+    </div>
+
+</div>
+
+
+    
+    
+{% endblock body %}
+    

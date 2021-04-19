@@ -1,0 +1,46 @@
+{% extends "layout.html" %}
+
+
+
+
+{% block body %}
+
+<div class="ContentLayout">
+    <div class="Pagination">
+        <h1>Sağlık Kuruluşları</h1>
+    </div>
+    <div class="SubContent">
+        <div class="tablo">
+
+            <table>
+                <thead>
+                    <tr>
+                        <td>Tedavi ID</td>
+                        <td>Tedavi Adı</td>
+                        <td>Uzmanlık ID</td>
+                    </tr>
+
+                </thead>
+                <tbody>
+
+                    {% for tedavi in tedaviler %}
+                    <tr>
+                        <td>{{tedavi.id}}</td>
+                        <td>{{tedavi.tedaviID}}</td>
+                        <td>{{tedavi.uzmanlikID}}</td>
+                        <td><a href="{% url 'base:tedavilerDuzenle' tedavi.id %}" class = "btn-update">Güncelle</a></td>
+                        <td><a href="{% url 'base:tedavilerSil' tedavi.id %}" class = "btn-delete">Sil</a> </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+
+{% endblock body %}

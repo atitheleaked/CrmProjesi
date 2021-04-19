@@ -1,0 +1,14 @@
+{% extends 'layout.html' %}
+{% block body %}
+<div class="ContentLayout">
+    <div class="Pagination">
+        <h1>Mesaj</h1>
+    </div>
+    <div class="SubContent">
+        <p>{{mdetay.gonderen}}</p>
+        <textarea readonly="true" style="resize: none;" name="" id="" cols="30" rows="10">{{mdetay.mesaj}}</textarea>
+    </div>
+
+</div>
+
+{% endblock body %}

@@ -1,0 +1,44 @@
+{% extends "layout.html" %}
+
+
+
+
+{% block body %}
+
+<div class="ContentLayout">
+    <div class="Pagination">
+        <h1>Sağlık Kuruluşları</h1>
+    </div>
+    <div class="SubContent">
+        <div class="tablo">
+
+            <table>
+                <thead>
+                    <tr>
+                        <td>ID</td>
+                        <td>Seviye Adı</td>
+                    </tr>
+
+                </thead>
+                <tbody>
+
+                    {% for seviye in seviyeler %}
+                    <tr>
+                        <td>{{seviye.id}}</td>
+                        <td>{{seviye.seviyeAdi}}</td>
+                        <td><a href="{% url 'base:seviyelerDuzenle' seviye.id %}" class = "btn-update">Güncelle</a></td>
+                        <td><a href="{% url 'base:seviyelerSil' seviye.id %}" class = "btn-delete">Sil</a> </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+
+{% endblock body %}
