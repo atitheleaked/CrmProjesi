@@ -46,7 +46,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'ckeditor',
     'django_cleanup',
-    'fontawesome-free',
+
 ]
 
 MIDDLEWARE = [
@@ -92,7 +92,7 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'theatilgan$mydb',
+        'NAME': 'theatilgan$crmdb',
         'USER': 'theatilgan',
         'PASSWORD': 'yonetici',
         'HOST': 'theatilgan.mysql.pythonanywhere-services.com',
