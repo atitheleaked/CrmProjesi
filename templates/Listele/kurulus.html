@@ -6,29 +6,51 @@
 {% block body %}
 {% csrf_token %}
 
-<div class="ContentLayout">
+<div class="ContentLayout" >
     <div class="Pagination">
         <h1>Sağlık Kuruluşları</h1>
     </div>
     <div class="SubContent">
         <div class="tablo">
-            <table>
+            <table style="width: 100%;table-layout: fixed;">
                 <thead>
                     <tr>
-                        <td>Kuruluş ID</td>
+                        <td style="width: 5%;">ID</td>
                         <td>Kuruluş Adı</td>
                         <td>Kuruluş Türü</td>
                         <td>Kuruluş Durumu</td>
-                        <td></td>
-                        <td></td>
+                        <td style="width: 5%;">Sehir</td>
+                        <td style="width: 5%;">İlçe</td>
+                        <td style="width: 5%;"></td>
             
                     </tr>
                     <tr id="kurulusAjaxFiltreleme">
-                        <td><input style="padding: 5px;" type="text" id="kurulusIDAra" placeholder="Aranacak"></td>
-                        <td><input style="padding: 5px;" type="text" id="kurulusAdiAra" placeholder="Aranacak"></td>
-                        <td><input style="padding: 5px;" type="text" id="kurulusTuruAra" placeholder="Aranacak"></td>
-                        <td><input style="padding: 5px;" type="text" id="kurulusDurumuAra" placeholder="Aranacak"></td>
-                        <td>Deaktif</td>
+                        <td><input  type="text" id="kurulusIDAra" placeholder="Aranacak"></td>
+                        <td><input  type="text" id="kurulusAdiAra" placeholder="Aranacak"></td>
+                        <td>
+                            <select name="kurulusTurFiltrele"  id="kurulusTurFiltrele">
+                                <option value="Hepsi">Hepsi</option>
+                                <option value="Dis Polikinigi">Dis Polikinigi</option>
+                                <option value="Ozel Hastane">Ozel Hastane</option>
+                                <option value="Kamu Hastanesi">Kamu Hastanesi</option>
+                                <option value="Estetik Hekimler">Estetik Hekimler</option>
+                                <option value="IFV">IFV</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select name="durumFiltrele"  id="durumFiltrele">
+                                <option value="Hepsi">Hepsi</option>
+                                <option value="Potansiyel">Potansiyel</option>
+                                <option value="Yeni">Yeni</option>
+                                <option value="In Progress">In Progress</option>
+                                <option value="Completed">Completed</option>
+                                <option value="Not Working">Not Working</option>
+                            </select>
+                        </td>
+
+                        <!--
+                            <input style="padding: 5px;" type="text" id="kurulusDurumuAra" placeholder="Aranacak">
+                        -->
             
                     </tr>
             
@@ -39,9 +61,14 @@
             </table>
         </div>
     </div>
+
+    <div class="modal-dialog" style="display: none;">
+        <div id="DetayModal">
+            {% include 'Detay/kurulus.html' %}
+        </div>
+    </div>
+    
 </div>
-
-
 
 
 

@@ -1,17 +1,19 @@
-from django.shortcuts import render,HttpResponse,redirect,get_object_or_404,reverse
+import googlemaps 
 from .forms import *
 from .models import *
+from . import config
+from django.shortcuts import render,HttpResponse,redirect,get_object_or_404,reverse
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.db.models.aggregates import Count
-from random import randint
 from django.contrib.auth.models import User
-import random
-import json
 from django.http import JsonResponse
+from django.core.serializers import serialize
+
+
 
 # Create your views here.
 
+gmaps = googlemaps.Client(key='AIzaSyCWSUlUYOtvj6AjAMvBE3XacynYkke_ZVc')  
 
 
 @login_required(login_url = "user:login")
@@ -25,6 +27,85 @@ def index(request):
     }
     
     return render(request,"index.html",context)
+
+
+def KullaniciListe(request):
+    mesajlar = Mesajlar.objects.filter(alıcı=request.user,okundu=False)
+    mesajlarAdet = len(mesajlar)
+    kullanicilar = User.objects.all()
+
+
+    if request.is_ajax():
+        if request.method == "POST":
+            kid = request.POST['id']
+            config.SecilenKullaniciID = kid
+        else:
+            kid = request.GET['id'] 
+            config.SecilenKullaniciID = kid
+
+        kullanici = get_object_or_404(User,id = kid)
+        kullaniciExtra = UserExtra.objects.filter(user_id=kid).first()
+    
+        form = KullaniciDetayForm(request.POST or None,request.FILES or None,instance = kullanici)
+        kExtraForm = UserExtraForm(request.POST or None,request.FILES or None,instance = kullaniciExtra)
+
+        kEklenenFirmalar = SaglikKuruluslari.objects.filter(author_id=kid)
+        context = {
+            "kdetay":kullanici,
+            "form":form,
+            "kExtraForm":kExtraForm,
+            "kEklenenFirmalar":kEklenenFirmalar
+        }
+        return render(request,"Detay/kullanici.html",context)
+    
+    if request.method == "POST":
+        kid = config.SecilenKullaniciID
+        kullanici = get_object_or_404(User,id = kid)
+        kullaniciExtra = UserExtra.objects.filter(user_id=kid).first()
+    
+        form = KullaniciDetayForm(request.POST or None,request.FILES or None,instance = kullanici)
+        kExtraForm = UserExtraForm(request.POST or None,request.FILES or None,instance = kullaniciExtra)
+        kaydet = form.save(commit=False)
+        kaydet.save()
+
+        messages.success(request,"Ayarlar başarıyla güncellendi")
+        return redirect("base:index")
+
+
+    
+
+    context={
+        "mesajlar":mesajlar,
+        "mesajlarAdet":mesajlarAdet,
+        "kullanicilar":kullanicilar
+    }
+
+    return render(request,"Listele/kullanicilar.html",context)
+
+@login_required(login_url = "user:login")
+def ayarlar(request):
+    mesajlar = Mesajlar.objects.filter(alıcı=request.user,okundu=False)
+    mesajlarAdet = len(mesajlar)
+    userSettings = UserExtra.objects.filter(user_id=request.user.id).first()
+    if not userSettings:
+        new = UserExtra.objects.create(user=request.user)
+        new.save()
+    kayit = get_object_or_404(UserExtra,user_id = request.user.id)
+    form = UserExtraForm(request.POST or None,request.FILES or None,instance = kayit)
+    if form.is_valid():
+        kaydet = form.save(commit=False)
+        kaydet.user = request.user
+        kaydet.save()
+
+        messages.success(request,"Ayarlar başarıyla güncellendi")
+        return redirect("base:index")
+    
+    context={
+        "mesajlar":mesajlar,
+        "mesajlarAdet":mesajlarAdet,
+        "form":form
+    }
+    return render(request,"User/settings.html",context)
 
 
 def mesajYeni(request):
@@ -107,37 +188,75 @@ def saglikKuruluslariListele(request):
         "kuruluslar":kuruluslar
     }
     if request.is_ajax():
-        kurulusID = request.POST['kurulusID']
-        kurulusAdi = request.POST['kurulusAdi']
-        kurulusTuru= request.POST['kurulusTuru']
-        kurulusDurumu = request.POST['kurulusDurumu']
+        islem = request.POST['islem']
+        if islem == "detayGoster":
+            kid = request.POST['id']
+            kdetay = get_object_or_404(SaglikKuruluslari,id = kid)
 
-        if kurulusID != "":
-            kuruluslar = SaglikKuruluslari.objects.filter(id = kurulusID)
-            context={
-                "mesajlar":mesajlar,
-                "mesajlarAdet":mesajlarAdet,
-                "kuruluslar":kuruluslar
-            }
-            return render(request,"Listele/ajaxListeleme/kurulus.html",context)
-
+            return render(request,"Detay/kurulus.html",{"kdetay":kdetay})
         else:
-            kuruluslar = SaglikKuruluslari.objects.filter(kurulusAdi__icontains=kurulusAdi,kurulusTuru__icontains=kurulusTuru,durum__icontains=kurulusDurumu)
-            context={
-                "mesajlar":mesajlar,
-                "mesajlarAdet":mesajlarAdet,
-                "kuruluslar":kuruluslar
-            }
-            return render(request,"Listele/ajaxListeleme/kurulus.html",context)
+            kurulusID = request.POST['kurulusID']
+            kurulusAdi = request.POST['kurulusAdi']
+            kurulusTuru= request.POST['kurulusTuru']
+            kurulusDurumu = request.POST['kurulusDurumu']
+    
+            if kurulusID != "":
+                kuruluslar = SaglikKuruluslari.objects.filter(id = kurulusID)
+                context={
+                    "mesajlar":mesajlar,
+                    "mesajlarAdet":mesajlarAdet,
+                    "kuruluslar":kuruluslar
+                }
+                return render(request,"Listele/ajaxListeleme/kurulus.html",context)
+    
+            else:
+                if kurulusTuru == "Hepsi":
+                    if kurulusDurumu == "Hepsi":
+                        kuruluslar = SaglikKuruluslari.objects.filter(kurulusAdi__icontains=kurulusAdi)
+                    else:
+                        kuruluslar = SaglikKuruluslari.objects.filter(kurulusAdi__icontains=kurulusAdi,durum__icontains=kurulusDurumu)
+                else:
+                    if kurulusDurumu == "Hepsi":
+                        kuruluslar = SaglikKuruluslari.objects.filter(kurulusAdi__icontains=kurulusAdi,kurulusTuru__icontains=kurulusTuru)
+                    else:
+                        kuruluslar = SaglikKuruluslari.objects.filter(kurulusAdi__icontains=kurulusAdi,kurulusTuru__icontains=kurulusTuru,durum__icontains=kurulusDurumu)
 
+                context={
+                    "mesajlar":mesajlar,
+                    "mesajlarAdet":mesajlarAdet,
+                    "kuruluslar":kuruluslar
+                }
+                return render(request,"Listele/ajaxListeleme/kurulus.html",context)
 
     
     return render(request,"Listele/kurulus.html",context)
 
+
 def saglikKuruluslariHarita(request):
     mesajlar = Mesajlar.objects.filter(alıcı=request.user,okundu=False)
     mesajlarAdet = len(mesajlar)
-    kuruluslar = SaglikKuruluslari.objects.all()
+    kuruluslar = SaglikKuruluslari.objects.all().order_by("sehir")
+    if request.is_ajax():
+        islem = request.POST['islem']
+        if islem == "sehirListele":
+            sehir = request.POST['sehir']
+            qs = Sehir.objects.filter(sehirAdi__icontains=sehir).order_by('sehirAdi')
+            sehirler = list()
+            for i in qs:
+                sehirler.append(i.sehirAdi)
+            return JsonResponse(sehirler, safe=False)
+    if request.method == "POST":
+        sehir = request.POST['sehir']
+        ksehir = Sehir.objects.filter(sehirAdi=sehir).first()
+        kuruluslar = SaglikKuruluslari.objects.filter(sehir=ksehir.id)
+        context={
+        "mesajlar":mesajlar,
+        "mesajlarAdet":mesajlarAdet,
+        "kuruluslar":kuruluslar
+        }
+            
+        return render(request,"Listele/kurulusHarita.html",context)
+
 
     context={
         "mesajlar":mesajlar,
@@ -151,11 +270,84 @@ def saglikKuruluslariEkle(request):
     mesajlarAdet = len(mesajlar)
 
     form = SaglikKuruluslariForm(request.POST or None,request.FILES or None)
+    form2 = LocationForm(request.POST or None,request.FILES or None)
 
     if form.is_valid():
+        sehir = request.POST['sehir'].strip()
+        ilce = request.POST['ilce'].strip()
+        mahalle = request.POST['mahalle'].strip()
+        sokak = request.POST['sokak'].strip()
+        cadde = request.POST['cadde'].strip()
+        kapiNo = request.POST['kapiNo'].strip()
+        postaKodu = request.POST['pKodu'].strip()
+        enlem = request.POST['enlem'].strip()
+        boylam = request.POST['boylam'].strip()
+
+        fsehir = Sehir.objects.filter(sehirAdi__icontains=sehir)
+        filce= Ilce.objects.filter(ilceAdi__icontains=ilce)
+        fmahalle = Mahalle.objects.filter(mahalleAdi__icontains=mahalle)
+        fsokak = Sokak.objects.filter(sokakAdi__icontains=sokak)
+        fcadde = Cadde.objects.filter(caddeAdi__icontains=cadde)
+        
+        if sehir != "":
+            if not fsehir:
+                ksehir = Sehir.objects.create(sehirAdi=sehir)
+                ksehir.save()
+                objSehir = Sehir.objects.get(id=ksehir.id)
+            else:
+                objSehir = Sehir.objects.get(sehirAdi=sehir)
+        
+        if ilce != "":
+            if not filce:
+                kilce = Ilce.objects.create(ilceAdi=ilce,sehir=objSehir)
+                kilce.save()
+                objIlce = Ilce.objects.get(id=kilce.id)
+            else:
+                objIlce = Ilce.objects.get(ilceAdi=ilce)
+        
+        if mahalle != "":
+            if not fmahalle:
+                kmahalle = Mahalle.objects.create(mahalleAdi=mahalle,ilce=objIlce)
+                kmahalle.save()
+                objMahalle = Mahalle.objects.get(id=kmahalle.id)
+            else:
+                objMahalle = Mahalle.objects.get(mahalleAdi=mahalle)
+        
+        if sokak != "":
+            if not fsokak:
+                ksokak = Sokak.objects.create(sokakAdi=sokak,mahalle=objMahalle)
+                ksokak.save()
+                objSokak = Sokak.objects.get(id=ksokak.id)
+            else:
+                objSokak = Sokak.objects.get(sokakAdi=sokak)
+        
+        if cadde != "":
+            if not fcadde:
+                kcadde = Cadde.objects.create(caddeAdi=cadde,sokak=objSokak)
+                kcadde.save()
+                objCadde = Cadde.objects.get(id=kcadde.id)
+            else:
+                objCadde = Cadde.objects.get(caddeAdi=cadde)
+        
+        kisiDetay = UserExtra.objects.get(user_id = request.user.id)
+        kisiEnlem = kisiDetay.latitude
+        kisiBoylam = kisiDetay.longitude
+        uzaklik = gmaps.distance_matrix([str(kisiEnlem) + " " + str(kisiBoylam)], [str(enlem) + " " + str(boylam)], mode='driving')['rows'][0]['elements'][0]["distance"]["text"]
+        uzaklik = uzaklik.replace("km","")
+        uzaklik = uzaklik.strip()
+
+
         kurulus = form.save(commit=False)
         
         kurulus.author = request.user
+        kurulus.sehir = objSehir
+        kurulus.ilce = objIlce
+        kurulus.mahalle = objMahalle
+        kurulus.sokak = objSokak
+        kurulus.cadde = objCadde
+        kurulus.kapiNo = kapiNo
+        kurulus.postaKodu = postaKodu
+        kurulus.kisiUzaklik = uzaklik
         kurulus.save()
 
         messages.success(request,"Yeni -Sağlık Kuruluşu- başarıyla eklendi")
@@ -164,9 +356,49 @@ def saglikKuruluslariEkle(request):
     context={
         "mesajlar":mesajlar,
         "mesajlarAdet":mesajlarAdet,
-        "form":form
+        "form":form,
+        "form2":form2
     }   
-    return render(request,"Islem/ekle.html",context)
+    if request.is_ajax():
+        islem = request.POST['islem']
+        if islem == "sehirListele":
+            sehir = request.POST['sehir']
+            qs = Sehir.objects.filter(sehirAdi__icontains=sehir).order_by('sehirAdi')
+            sehirler = list()
+            for i in qs:
+                sehirler.append(i.sehirAdi)
+            return JsonResponse(sehirler, safe=False)
+        if islem == "ilceListele":
+            ilce = request.POST['ilce']
+            qs = Ilce.objects.filter(ilceAdi__icontains=ilce).order_by('ilceAdi')
+            ilceler = list()
+            for i in qs:
+                ilceler.append(i.ilceAdi)
+            return JsonResponse(ilceler, safe=False)
+        if islem == "mahalleListele":
+            mahalle = request.POST['mahalle']
+            qs = Mahalle.objects.filter(mahalleAdi__icontains=mahalle).order_by('mahalleAdi')
+            mahalleler = list()
+            for i in qs:
+                mahalleler.append(i.mahalleAdi)
+            return JsonResponse(mahalleler, safe=False)
+        if islem == "sokakListele":
+            sokak = request.POST['sokak']
+            qs = Sokak.objects.filter(sokakAdi__icontains=sokak).order_by('sokakAdi')
+            sokaklar = list()
+            for i in qs:
+                sokaklar.append(i.sokakAdi)
+            return JsonResponse(sokaklar, safe=False)
+        if islem == "caddeListele":
+            cadde = request.POST['cadde']
+            qs = Cadde.objects.filter(caddeAdi__icontains=cadde).order_by('caddeAdi')
+            caddeler = list()
+            for i in qs:
+                caddeler.append(i.caddeAdi)
+            return JsonResponse(caddeler, safe=False)
+    
+    return render(request,"Islem/kurulusekle.html",context)
+
 
 
 def saglikKuruluslariDuzenle(request,id):
@@ -174,10 +406,9 @@ def saglikKuruluslariDuzenle(request,id):
     mesajlarAdet = len(mesajlar)
 
     kurulus = get_object_or_404(SaglikKuruluslari,id = id)
-    form = SaglikKuruluslariForm(request.POST or None,request.FILES or None,instance = kurulus)
+    form = SaglikKuruluslariFullForm(request.POST or None,request.FILES or None,instance = kurulus)
     if form.is_valid():
         kurulus = form.save(commit=False)
-        
         kurulus.author = request.user
         kurulus.save()
 
@@ -242,6 +473,7 @@ def hizmetDuzenle(request,id):
 
     hizmet = get_object_or_404(Hizmetler,id = id)
     form = HizmetlerForm(request.POST or None,request.FILES or None,instance = hizmet)
+    p
     if form.is_valid():
         hizmet = form.save(commit=False)
         hizmet.save()
@@ -361,6 +593,26 @@ def kisilerEkle(request):
     }
     return render(request,"Islem/ekle.html",context)
 
+def kisilerEkleByKurulus(request,id):
+    mesajlar = Mesajlar.objects.filter(alıcı=request.user,okundu=False)
+    mesajlarAdet = len(mesajlar)
+    form = KisilerForm(request.POST or None,request.FILES or None)
+
+    if form.is_valid():
+        kisi = form.save(commit=False)
+        kisi.save()
+
+        sagKurulus = SaglikKuruluslari.objects.get(id=id)
+        sagKisi = SaglikKisiler.objects.create(kisiID=kisi,saglikID=sagKurulus)
+        messages.success(request,"Yeni -Kisi-Kurulus- başarıyla eklendi")
+        return redirect("base:index")
+    context={
+        "mesajlar":mesajlar,
+        "mesajlarAdet":mesajlarAdet,
+        "form":form
+    }
+    return render(request,"Islem/ekle.html",context)
+
 
 def kisilerDuzenle(request,id):
     mesajlar = Mesajlar.objects.filter(alıcı=request.user,okundu=False)
@@ -428,6 +680,7 @@ def saglikKisilerDuzenle(request,id):
 
     kisi = get_object_or_404(SaglikKisiler,id = id)
     form = SaglikKisilerForm(request.POST or None,request.FILES or None,instance = kisi)
+   
     if form.is_valid():
         kisi = form.save(commit=False)
         kisi.save()

@@ -1,0 +1,122 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+<div class="detay-header-primary">
+    <button class="close">X</button>
+    <h3>Firma Güncelle</h3>
+</div>
+<div class="modal-body">
+    <div class="row">
+        <div class="col-md-12">
+            <form action="" class="row">
+                <div class="col-sm-6 firmaDetay">
+                    <div class="col-md-12 form-group">
+                        <label class="control-label">Adı:</label>
+                        <input type="text" placeholder="" disabled="true" value="{{kdetay.kurulusAdi}}" class="form-control fc-editable">
+                     </div>
+                     <div class="col-md-12 form-group">
+                        <label class="control-label">Türü</label>
+                        <input type="text" placeholder="" disabled="true" value="{{kdetay.kurulusTuru}}" class="form-control fc-editable">
+                     </div>
+                     <div class="col-md-12 form-group">
+                        <label class="control-label">Durumu</label>
+                        <input type="text" placeholder="" disabled="true" value="{{kdetay.durum}}" class="form-control fc-editable">
+                     </div>
+                     <div class="col-md-12 form-group">
+                        <label class="control-label">Telefon</label>
+                        <input type="text" placeholder="" disabled="true" value="{{kdetay.telefon}}" class="form-control fc-editable">
+                     </div>
+                     <div class="col-md-12 form-group">
+                        <label class="control-label">Fax</label>
+                        <input type="text" placeholder="" disabled="true" value="{{kdetay.fax}}" class="form-control fc-editable">
+                     </div>
+                     <div class="col-md-12 form-group">
+                        <label class="control-label">Website</label>
+                        <input type="text" placeholder="" disabled="true" value="{{kdetay.website}}" class="form-control fc-editable">
+                     </div>
+                     <div class="col-md-12 form-group">
+                        <label class="control-label">Mail</label>
+                        <input type="text" placeholder="" disabled="true" value="{{kdetay.mail}}" class="form-control fc-editable">
+                     </div>
+                     <div class="col-md-12 form-group">
+                        <label class="control-label">Doktor Sayısı</label>
+                        <input type="text" placeholder="" disabled="true" value="{{kdetay.doktorSayisi}}" class="form-control fc-editable">
+                     </div>
+                     <div class="col-md-12 form-group">
+                        <label class="control-label">Eklenme Tarihi</label>
+                        <input type="text" placeholder="" disabled="true" value="{{kdetay.eklenmeTarihi}}" class="form-control fc-editable">
+                     </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="col-md-12">
+                        <div class="col-md-6 form-group" style="float: left;">
+                            <label class="control-label">Enlem</label>
+                            <input type="text" placeholder="" disabled="true" value="{{kdetay.enlem}}" class="form-control fc-editable">
+                         </div>
+                         <div class="col-md-6 form-group" style="float: left;">
+                            <label class="control-label">Boylam</label>
+                            <input type="text" placeholder="" disabled="true" value="{{kdetay.boylam}}" class="form-control fc-editable">
+                         </div>
+                     </div>
+                    <div class="col-md-12 form-group">
+                        <label class="control-label">Şehir</label>
+                        <input type="text" placeholder="" disabled="true" value="{{kdetay.sehir}}" class="form-control fc-editable">
+                     </div>
+                     <div class="col-md-12 form-group">
+                        <label class="control-label">İlçe</label>
+                        <input type="text" placeholder="" disabled="true" value="{{kdetay.ilce}}" class="form-control fc-editable">
+                     </div>
+                     <div class="col-md-12 form-group">
+                        <label class="control-label">Mahalle</label>
+                        <input type="text" placeholder="" disabled="true" value="{{kdetay.mahalle}}" class="form-control fc-editable">
+                     </div>
+                     <div class="col-md-12 form-group">
+                        <label class="control-label">Sokak</label>
+                        <input type="text" placeholder="" disabled="true" value="{{kdetay.sokak}}" class="form-control fc-editable">
+                     </div>
+                     <div class="col-md-12 form-group">
+                        <label class="control-label">Cadde</label>
+                        <input type="text" placeholder="" disabled="true" value="{{kdetay.cadde}}" class="form-control fc-editable">
+                     </div>
+                     <div class="col-md-12 form-group">
+                        <label class="control-label">Kapı No</label>
+                        <input type="text" placeholder="" disabled="true" value="{{kdetay.kapiNo}}" class="form-control fc-editable">
+                     </div>
+                     <div class="col-md-12 form-group">
+                        <label class="control-label">Posta Kodu</label>
+                        <input type="text" placeholder="" disabled="true" value="{{kdetay.postaKodu}}" class="form-control fc-editable">
+                     </div>
+                </div>
+            </form>
+            <button id="firmaDetayDuzenle">Düzenle</button>
+            <button type="submit" id="firmaDetayDuzenleKaydet" style="display: none;">Kaydet</button>
+        </div>
+    </div>
+    <script>
+        $('#firmaDetayDuzenle').click(function(){
+            $('.fc-editable').prop('disabled', false);
+            $('#firmaDetayDuzenleKaydet').css('display','inline')
+        })
+        $('#firmaDetayDuzenleKaydet').click(function(){
+            $('.fc-editable').attr('disabled', true);
+            $('#firmaDetayDuzenleKaydet').css('display','none')
+        })
+        $('.close').click(function () {
+            $('.modal-dialog').css('display', 'none')
+        })
+        $('#kisiByKurulus').click(function () {
+            var detay = "http://127.0.0.1:8000/kisilereklebykurulus/" + {{ kdetay.id }}
+            location.href = detay
+        })
+        
+        $('#detayKurulusSil').click(function () {
+            var detay = "http://127.0.0.1:8000/kurulussil/" + {{ kdetay.id }}
+            location.href = detay
+        })
+        
+        
+    </script>
+    
+    
+</div>
+

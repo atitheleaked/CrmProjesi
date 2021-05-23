@@ -1,0 +1,63 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+
+{% load crispy_forms_tags %}
+<div class="detay-header-primary">
+    <button class="close">X</button>
+    <h3>Kullanıcı Bilgisi</h3>
+</div>
+<div class="modal-body">
+    <div class="row">
+        <div class="col-md-12">
+            <form method = "post" enctype="multipart/form-data" class="row ">
+                
+                {% csrf_token %}
+                <div class="col-sm-6 fc-editable-list ">
+                    <div class="col-md-12">
+                        <input type="hidden" class="form-control" name="kid" id="kid" disabled="true" value="{{kdetay.id}}" >
+                        {{form.media}}
+                        {{form|crispy}}
+                    </div>
+                    <div class="col-md-12">
+
+                        {{kExtraForm.media}}
+                        {{kExtraForm|crispy}}
+                    </div>
+                </div>
+                <div class="col-sm-6">
+
+                    {% for firma in kEklenenFirmalar %}
+                    <div class="col-md-12 form-group" style="border-bottom: 1px lightgrey dotted;padding-bottom: 8px;">
+                        <label class="control-label">Eklenen Kuruluş</label>
+                        <input type="text" placeholder="" disabled="true" value="{{firma.kurulusAdi}}"
+                            class="form-control">
+                        <label class="control-label">{{firma.kisiUzaklik}} KM</label>
+                    </div>
+                    {% endfor %}
+                </div>
+                <a href="#" id="firmaDetayDuzenle">Düzenle</a>
+                <a href="javascript:$('form').submit()" type="submit" id="firmaDetayDuzenleKaydet" style="display: none;">Kaydet</a>
+            </form>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function () {
+            $('.fc-editable-list').find('.form-control').attr('class', 'form-control fc-editable') 
+            $('.checkboxinput ').attr('class', 'checkboxinput form-check-input fc-editable')
+            $('.fc-editable').attr('disabled', true)
+            $('small').css('display', 'none')
+        })
+        $('#firmaDetayDuzenle').click(function () {
+            $('.fc-editable').prop('disabled', false);
+            $('#firmaDetayDuzenleKaydet').css('display', 'inline')
+        })
+        
+        $('.close').click(function () {
+            $('.modal-dialog').css('display', 'none')
+        })
+
+    </script>
+
+
+</div>

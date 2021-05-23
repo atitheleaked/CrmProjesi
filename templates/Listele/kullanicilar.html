@@ -1,0 +1,68 @@
+{% extends "layout.html" %}
+
+
+
+
+{% block body %}
+
+{% csrf_token %}
+<div class="ContentLayout">
+    <div class="Pagination">
+        <h1>Kullanıcılar</h1>
+    </div>
+    <div class="SubContent">
+        <div class="tablo">
+
+            <table>
+                <thead>
+                    <tr>
+                        <td>Kişi ID</td>
+                        <td>Kullanıcı Adı</td>
+                    </tr>
+
+                </thead>
+                <tbody>
+
+                    {% for kisi in kullanicilar %}
+                    <tr onclick="kisiDetayGoster({{kisi.id}})">
+                        <td>{{kisi.id}}</td>
+                        <td>{{kisi.username}}</td>
+                    </tr>
+                    {% endfor %}
+                    <script>
+                        function kisiDetayGoster(id) {
+                            $.ajax({
+                                url: '',
+                                type: 'GET',
+                                async: false,
+                                data: {
+                                    islem: 'detayGoster',
+                                    id: id,
+                                    csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+                                },
+                                success: function (response) {
+                                    $('.modal-dialog').css('display', 'block')
+                                    $('#DetayModal').html(response);
+                                },
+                                error: function () {
+                                    alert('birşeyler hatalı!');
+                                }
+                            });
+                        }</script>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="modal-dialog" style="display: none;">
+        <div id="DetayModal">
+            {% include 'Detay/kullanici.html' %}
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+{% endblock body %}

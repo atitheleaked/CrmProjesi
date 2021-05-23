@@ -1,0 +1,7 @@
+Django >=3.1.4
+django-ckeditor >=6.0.0
+django-cleanup >=5.1.0
+django-crispy-forms >=1.9.2
+fontawesome-free >= 5.15.3
+mysqlclient >= 2.0.3
+pip install googlemaps >= 4.4.5

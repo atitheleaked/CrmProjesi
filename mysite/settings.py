@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 from pathlib import Path
 import os
 
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -46,7 +47,8 @@ INSTALLED_APPS = [
     'crispy_forms',
     'ckeditor',
     'django_cleanup',
-
+    'location_field.apps.DefaultConfig',
+    'googlemaps'
 ]
 
 MIDDLEWARE = [
@@ -83,21 +85,21 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
-#DATABASES = {
-#    'default': {
-#        'ENGINE': 'django.db.backends.sqlite3',
-#        'NAME': BASE_DIR / 'db.sqlite3',
-#    }
-#}
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'theatilgan$crmdb',
-        'USER': 'theatilgan',
-        'PASSWORD': 'yonetici',
-        'HOST': 'theatilgan.mysql.pythonanywhere-services.com',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+#DATABASES = {
+#    'default': {
+#        'ENGINE': 'django.db.backends.mysql',
+#        'NAME': 'theatilgan$crmdb',
+#        'USER': 'theatilgan',
+#        'PASSWORD': 'yonetici',
+#        'HOST': 'theatilgan.mysql.pythonanywhere-services.com',
+#    }
+#}
 
 
 # Password validation
@@ -136,6 +138,15 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
+MAP_WIDGETS = {
+    "GooglePointFieldWidget": (
+        ("zoom", 15),
+        ("mapCenterLocationName", "antalya"),
+        ("GooglePlaceAutocompleteOptions", {'componentRestrictions': {'country': 'tr'}}),
+        ("markerFitZoom", 12),
+    ),
+    "GOOGLE_MAP_API_KEY": "<AIzaSyCWSUlUYOtvj6AjAMvBE3XacynYkke_ZVc>"
+}
 
 
 STATIC_URL = '/static/'
@@ -155,4 +166,3 @@ CKEDITOR_CONFIGS = {
 }
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-

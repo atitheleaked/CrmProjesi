@@ -1,0 +1,125 @@
+{% extends "layout.html" %}
+
+{% block body %}
+{% load crispy_forms_tags %}
+
+
+<div class="ContentLayout">
+    <div class="Pagination">
+        <h1>Kuruluş Ekle</h1>
+    </div>
+    <div class="SubContent">
+        <form method="POST" class="formKayitEkleme " enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="">
+                <div class="row">
+                    <div class="col-sm-6">
+                        {{form.media}}
+                        {{form|crispy}}
+                    </div>
+
+                    <div class="col-sm-6">
+                            <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+                            <script>
+                                var lat;
+                                var lng;
+                                let map;
+                                let markers = [];
+    
+                                $(document).ready(function () {
+                                    getLocation();
+                                })
+                                function getLocation() {
+                                    if (navigator.geolocation) {
+                                        navigator.geolocation.getCurrentPosition(showPosition);
+                                    } else {
+                                        console.log("Geolocation is not supported by this browser.");
+                                    }
+                                }
+                                function showPosition(position) {
+                                    lat = position.coords.latitude;
+                                    lng = position.coords.longitude;
+                                    console.log(lat,lng)
+                                    initMap();
+                                }
+                                function initMap() {
+                                    const myLatlng = { lat: lat, lng: lng };
+                                    const map = new google.maps.Map(document.getElementById("map"), {
+                                        zoom: 18,
+                                        center: myLatlng,
+                                    });
+                                    google.maps.event.addListener(map, "click", function (e) {
+                                        clearMarkers();
+                                        markers = [];
+    
+                                        const marker = new google.maps.Marker({
+                                            position: e.latLng,
+                                            map: map,
+                                        });
+                                        markers.push(marker);
+    
+                                        lat = e.latLng.lat();
+                                        $('#id_enlem').val(lat)
+                                        lng = e.latLng.lng();
+                                        $('#id_boylam').val(lng)
+                                    });
+                                }
+                                function setMapOnAll(map) {
+                                    for (let i = 0; i < markers.length; i++) {
+                                        markers[i].setMap(map);
+                                    }
+                                }
+    
+                                // Removes the markers from the map, but keeps them in the array.
+                                function clearMarkers() {
+                                    setMapOnAll(null);
+                                }
+    
+                            </script>
+                            <div id="map" style="width: 100%;height: 50%;"></div>
+                            <script type="text/javascript"
+                            src="http://maps.googleapis.com/maps/api/js?libraries=geometry&sensor=false&key=AIzaSyCWSUlUYOtvj6AjAMvBE3XacynYkke_ZVc"></script>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div id="div_id_sehir" class="form-group">
+                        <label for="sehir">Şehir</label>
+                        <input aria-autocomplete="both" class="form-control " type="text" name="sehir" id="sehir">
+                    </div>
+                    <div id="div_id_ilce" class="form-group">
+                        <label for="ilce">İlçe</label>
+                        <input aria-autocomplete="both" class="form-control" type="text" name="ilce" id="ilce">
+                    </div>
+                    <div id="div_id_mahalle" class="form-group">
+                        <label for="mahalle">Mahalle</label>
+                        <input aria-autocomplete="both" class="form-control" type="text" name="mahalle" id="mahalle">
+                    </div>
+                    <div id="div_id_sokak" class="form-group">
+                        <label for="sokak">Sokak</label>
+                        <input aria-autocomplete="both" class="form-control" type="text" name="sokak" id="sokak">
+                    </div>
+                    <div id="div_id_cadde" class="form-group">
+                        <label for="ilce">Cadde</label>
+                        <input aria-autocomplete="both" class="form-control" type="text" name="cadde" id="cadde">
+                    </div>
+                    <div id="div_id_kapino" class="form-group">
+                        <label for="kapiNo">Kapı No</label>
+                        <input aria-autocomplete="both" class="form-control" type="number" name="kapiNo" id="kapiNo">
+                    </div>
+                    <div id="div_id_pKodu" class="form-group">
+                        <label for="pKodu">Posta Kodu</label>
+                        <input aria-autocomplete="both" class="form-control" type="number" name="pKodu" id="pKodu">
+                    </div>
+                </div>
+                <button type="submit">Ekle</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+
+
+
+{% endblock body %}

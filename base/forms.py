@@ -1,18 +1,73 @@
 from django import forms
+from django.contrib.auth.models import User
 from .models import *
 
+
+class KullaniciDetayForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = [
+            'first_name',
+            'last_name',
+            'is_superuser',
+            'is_active'
+        ]
+
+class UserExtraForm(forms.ModelForm):
+
+    class Meta:
+        model = UserExtra
+        fields = ['latitude','longitude']
+
+class LocationForm(forms.ModelForm):
+
+    class Meta:
+        model = Location
+        fields = '__all__'
 
 class MesajlarForm(forms.ModelForm):
 
     class Meta:
         model = Mesajlar
         fields = '__all__'
-    
+
+class SaglikKuruluslariFullForm(forms.ModelForm):
+    class Meta:
+        model = SaglikKuruluslari
+        fields = [
+            'kurulusAdi',
+            'telefon',
+            'kurulusTuru',
+            'durum',
+            'sehir',
+            'ilce',
+            'mahalle',
+            'sokak',
+            'cadde',
+            'kapiNo',
+            'postaKodu',
+            'enlem',
+            'boylam',
+            'fax',
+            'website',
+            'mail',
+            'doktorSayisi']
+
 
 class SaglikKuruluslariForm(forms.ModelForm):
     class Meta:
         model = SaglikKuruluslari
-        fields = '__all__'
+        fields = [
+            'kurulusAdi',
+            'telefon',
+            'kurulusTuru',
+            'durum',
+            'enlem',
+            'boylam',
+            'fax',
+            'website',
+            'mail',
+            'doktorSayisi']
 
 class SaglikHizmetlerForm(forms.ModelForm):
     class Meta:

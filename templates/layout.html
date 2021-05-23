@@ -74,7 +74,7 @@
                         </div>
                     </a>
                     <ul class="treeview-menu" style="display: none;">
-                        <li><a href="#"><i class="fa fa-arrow-right"></i>Yönetici Görevi</a></li>
+                        <li><a href="{% url 'base:KullaniciListe' %}"><i class="fa fa-arrow-right"></i>Kullanıcılar</a></li>
                         <li><a href="#"><i class="fa fa-arrow-right"></i>Yönetici Görevi</a></li>
                         <li><a href="#"><i class="fa fa-arrow-right"></i>Yönetici Görevi</a></li>
 
@@ -361,15 +361,16 @@
 
                     <!-- AYARLAR -->
                     <li><a href="#"><i style="height: 20px;width: 20px;" class="fa fa-cog"></i><span>2</span></a>
-                        <ul class="dropdown-menu" style="display: none;">
-                            <li><a href="">
-                                    <i class="fa fa-dot-circle" style="color: #009688;"></i>
-                                    UzunUyarı UzunUyarı UzunUyarı UzunUyarı UzunUyarı
+                        <ul id="kullaniciAyar" class="dropdown-menu" style="display: none;">
+                            <li><a href="{% url 'base:ayarlar' %}">
+                                    Ayarlar
                                 </a></li>
                             <li><a href="">
-                                    <i class="fa fa-dot-circle" style="color: #009688;"></i>
-                                    UzunUyarı UzunUyarı UzunUyarı UzunUyarı UzunUyarı
+                                    ####
                                 </a></li>
+                            <li><a href="{% url 'user:logout' %}" style="margin-top: 8px; border-top: lightgrey 1px solid;">
+                                Çıkış Yap
+                            </a></li>
                         </ul>
                     </li>
 
@@ -428,6 +429,8 @@
             </div>
         </main>
     </div>
+
+    
     
     <script src="{% static 'js/script.js' %}"></script>
 </body>

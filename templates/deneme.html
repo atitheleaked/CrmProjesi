@@ -1,0 +1,31 @@
+<tr>
+    <th><label for="id_first_name">First name:</label></th>
+    <td><input type="text" name="first_name" maxlength="150" id="id_first_name"></td>
+</tr>
+<tr>
+    <th><label for="id_last_name">Last name:</label></th>
+    <td><input type="text" name="last_name" maxlength="150" id="id_last_name"></td>
+</tr>
+<tr>
+    <th><label for="id_email">Email address:</label></th>
+    <td><input type="email" name="email" maxlength="254" id="id_email"></td>
+</tr>
+<tr>
+    <th><label for="id_date_joined">Date joined:</label></th>
+    <td>
+        <ul class="errorlist">
+            <li>This field is required.</li>
+        </ul><input type="text" name="date_joined" required id="id_date_joined"><input type="hidden"
+            name="initial-date_joined" id="initial-id_date_joined">
+    </td>
+</tr>
+<tr>
+    <th><label for="id_is_superuser">Superuser status:</label></th>
+    <td><input type="checkbox" name="is_superuser" id="id_is_superuser"><br><span class="helptext">Designates that this
+            user has all permissions without explicitly assigning them.</span></td>
+</tr>
+<tr>
+    <th><label for="id_is_active">Active:</label></th>
+    <td><input type="checkbox" name="is_active" id="id_is_active"><br><span class="helptext">Designates whether this
+            user should be treated as active. Unselect this instead of deleting accounts.</span></td>
+</tr>

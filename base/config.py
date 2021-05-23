@@ -1,0 +1,2 @@
+SecilenKullaniciID = -1
+

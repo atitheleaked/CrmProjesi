@@ -8,6 +8,13 @@ app_name="base"
 urlpatterns = [
     path('', views.index, name = "index"),
 
+    ##Genel
+    path('ayarlar/', views.ayarlar, name="ayarlar"),
+    
+    #Yönetici
+    path('kisiler/', views.KullaniciListe, name = "KullaniciListe"),
+
+
     ## Mesajlar    
     path('mesajyeni/', views.mesajYeni, name = "mesajYeni"),
     path('mesajlar/', views.mesajListele, name = "mesajListele"),
@@ -36,6 +43,7 @@ urlpatterns = [
     ## Kişiler
     path('kisilerlistele/', views.kisilerListele, name = "kisilerListele"),
     path('kisilerekle/', views.kisilerEkle, name = "kisilerEkle"),
+    path('kisilereklebykurulus/<int:id>', views.kisilerEkleByKurulus, name = "kisilerEkleByKurulus"),
     path('kisilerduzenle/<int:id>',views.kisilerDuzenle,name = "kisilerDuzenle"),
     path('kisilersil/<int:id>',views.kisilerSil,name = "kisilerSil"),
 

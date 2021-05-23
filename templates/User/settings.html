@@ -1,0 +1,50 @@
+{% extends 'layout.html' %}
+
+
+{% block body %}
+{% load crispy_forms_tags %}
+
+
+<div class="ContentLayout">
+    <div class="Pagination">
+        <h1>Ayarlar</h1>
+    </div>
+    <div class="SubContent">
+        <form method="POST" class="formKayitEkleme formKayitEklemeplus " enctype="multipart/form-data">
+            <div class="">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                {% csrf_token %}
+                                {{form.media}}
+                                {{form|crispy}}
+                            </div>
+                            <div class="col-sm-6" style="display: flex;">
+                                <button type="button" style="height: auto; align-self: center; width: auto;" id="adresBul">Adresimi Bul</button >
+                                <script>
+                                    let button = document.getElementById("adresBul");
+                                    let latText = document.getElementById("id_latitude");
+                                    let longText = document.getElementById("id_longitude");
+    
+                                    button.addEventListener("click", function () {
+                                        navigator.geolocation.getCurrentPosition(function (position) {
+                                            let lat = position.coords.latitude;
+                                            let long = position.coords.longitude;
+                                            $('#id_latitude').val(lat)
+                                            $('#id_longitude').val(long)
+                                        });
+                                    });
+                                </script>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+                <button type="submit">Ekle</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock body %}

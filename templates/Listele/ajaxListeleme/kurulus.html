@@ -1,12 +1,22 @@
+{% load static %}
+{% csrf_token %}
+
+{% for kurulus in kuruluslar %}
 
 
-    {% for kurulus in kuruluslar %}
-    <tr>
-        <td><a href="">{{kurulus.id}}</a></td>
-        <td><a href="">{{kurulus.kurulusAdi}}</a></td>
-        <td>{{kurulus.kurulusTuru}}</td>
-        <td>{{kurulus.durum}}</td>
-        <td><a href="{% url 'base:kurulusDuzenle' kurulus.id %}" class = "btn-update">Güncelle</a></td>
-        <td><a href="{% url 'base:kurulusSil' kurulus.id %}" class = "btn-delete">Sil</a> </td>
-    </tr>
-    {% endfor %}
+    
+
+    
+<tr onclick="detayGoster({{kurulus.id}})">
+    <td><a href="#">{{kurulus.id}}</a></td>
+    <td><a href="#">{{kurulus.kurulusAdi}}</a></td>
+    <td>{{kurulus.kurulusTuru}}</td>
+    <td>{{kurulus.durum}}</td>
+    <td>{{kurulus.sehir}}</td>
+    <td>{{kurulus.ilce}}</td>
+   
+    
+</tr>
+
+{% endfor %}
+

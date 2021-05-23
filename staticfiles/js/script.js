@@ -16,6 +16,139 @@ $('#alici').change(function(){
     $('.ui-helper-hidden-accessible').css('display','none')
 })
 
+
+
+
+
+$('#sehir').keyup(function(){
+    $sehir = $('#sehir').val();
+    $.ajax({
+        url: '',
+        type: 'POST',
+        async: false,
+        data:{
+            islem:'sehirListele',
+            sehir: $sehir,
+            csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+        },
+        success: function(response){
+            $("#sehir").autocomplete({
+                source: response,
+                minLength: 2,
+                messages: {
+                    noResults: '',
+                    results: function() {}
+                }
+            });
+        },
+        error: function(){
+        }
+    });
+})
+$('#ilce').keyup(function(){
+    $ilce = $('#ilce').val();
+    $.ajax({
+        url: '',
+        type: 'POST',
+        async: false,
+        data:{
+            islem:'ilceListele',
+            ilce: $ilce,
+            csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+        },
+        success: function(response){
+            $("#ilce").autocomplete({
+                source: response,
+                minLength: 2,
+                messages: {
+                    noResults: '',
+                    results: function() {}
+                }
+            });
+        },
+        error: function(){
+        }
+    });
+})
+$('#mahalle').keyup(function(){
+    $mahalle = $('#mahalle').val();
+    $.ajax({
+        url: '',
+        type: 'POST',
+        async: false,
+        data:{
+            islem:'mahalleListele',
+            mahalle: $mahalle,
+            csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+        },
+        success: function(response){
+            $("#mahalle").autocomplete({
+                source: response,
+                minLength: 2,
+                messages: {
+                    noResults: '',
+                    results: function() {}
+                }
+            });
+        },
+        error: function(){
+        }
+    });
+})
+$('#sokak').keyup(function(){
+    $sokak = $('#sokak').val();
+    $.ajax({
+        url: '',
+        type: 'POST',
+        async: false,
+        data:{
+            islem:'sokakListele',
+            sokak: $sokak,
+            csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+        },
+        success: function(response){
+            $("#sokak").autocomplete({
+                source: response,
+                minLength: 2,
+                messages: {
+                    noResults: '',
+                    results: function() {}
+                }
+            });
+        },
+        error: function(){
+        }
+    });
+})
+$('#cadde').keyup(function(){
+    $cadde = $('#cadde').val();
+    $.ajax({
+        url: '',
+        type: 'POST',
+        async: false,
+        data:{
+            islem:'caddeListele',
+            cadde: $cadde,
+            csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+        },
+        success: function(response){
+            $("#cadde").autocomplete({
+                source: response,
+                minLength: 2,
+                messages: {
+                    noResults: '',
+                    results: function() {}
+                }
+            });
+        },
+        error: function(){
+        }
+    });
+})
+
+
+
+
 $(function () {
     $("#alici").autocomplete({
         source: '',
@@ -25,10 +158,28 @@ $(function () {
             results: function() {}
         }
     });
-    
 });
 
-
+function detayGoster(id){
+    $.ajax({
+        url: '',
+        type: 'POST',
+        async: false,
+        data:{
+            islem:'detayGoster',
+            id: id,
+            csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+        },
+        success: function(response){
+            $('.modal-dialog').css('display','block')
+            $('#DetayModal').html(response);
+            console.log("çalışmalı")
+        },
+        error: function(){
+            alert('birşeyler hatalı!');
+        }
+    });
+}
 
 
 $('.ignore-click').on("click",function(e){
@@ -84,31 +235,6 @@ $('#TopMenu ul li').click(function(){
     
 })
 
-/*$('#ReceiverSearch').click(function(){
-    $aranacak = $('#ReceiverUsername').val();
-    console.log($aranacak)
-    $.ajax({
-        url: '',
-        type: 'POST',
-        async: false,
-        data:{
-            islem:'KullaniciAra',
-            aranacak: $aranacak,
-            csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
-        },
-        success: function(response){
-            $('#result').html(response);
-        }
-    });
-})
-$ReceiverUsername = '';
-
-$('.ReceiverSelect').click(function(){
-    $ReceiverUsername = $(this).text();
-    console.log($ReceiverUsername)
-    $('#ReceiverFinal').text($ReceiverUsername);
-})
-*/
 
 $('#MesajGonder').click(function(){
     $alıcı= $('#alici').val()
@@ -139,15 +265,43 @@ $('#MesajGonder').click(function(){
 
 
 $('#kurulusAjaxFiltreleme  input').keyup(function(){
+    
     $kurulusID = $('#kurulusIDAra').val()
     $kurulusAdi = $('#kurulusAdiAra').val()
-    $kurulusTuru = $('#kurulusTuruAra').val()
-    $kurulusDurumu = $('#kurulusDurumuAra').val()
+    $kurulusTuru = $('#kurulusTurFiltrele').val()
+    $kurulusDurumu = $('#durumFiltrele').val()
     $.ajax({
         url: '',
         type: 'POST',
         async: false,
         data:{
+            islem:"filtrele",
+            kurulusID:$kurulusID,
+            kurulusAdi: $kurulusAdi,
+            kurulusTuru:$kurulusTuru,
+            kurulusDurumu:$kurulusDurumu,
+
+            csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+        },
+        success: function(data){
+            $('#ajaxYukleme').html(data)
+        },
+        error: function(){
+            alert('birşeyler hatalı!');
+        }
+    });
+})
+$('#kurulusAjaxFiltreleme  select').change(function(){
+    $kurulusID = $('#kurulusIDAra').val()
+    $kurulusAdi = $('#kurulusAdiAra').val()
+    $kurulusTuru = $('#kurulusTurFiltrele').val()
+    $kurulusDurumu = $('#durumFiltrele').val()
+    $.ajax({
+        url: '',
+        type: 'POST',
+        async: false,
+        data:{
+            islem:"filtrele",
             kurulusID:$kurulusID,
             kurulusAdi: $kurulusAdi,
             kurulusTuru:$kurulusTuru,

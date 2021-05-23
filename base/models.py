@@ -27,35 +27,89 @@ notTurleri = (
 
 
 
+class Location(models.Model):
+    latitude = models.FloatField(null=True, default=None, verbose_name="location latitude")
+    longitude = models.FloatField(null=True, default=None, verbose_name="location longitude")
+    street = models.CharField(max_length=100, verbose_name="street")
+    zip_code = models.CharField(max_length=100, verbose_name="zip code")
+    city = models.CharField(max_length=100, verbose_name="city")
+    country = models.CharField(max_length=100, verbose_name="country")
+
+
+class Sehir(models.Model):
+    sehirAdi = models.CharField(max_length = 30,null=False,blank=False, verbose_name="Şehir Adı")
+    eklenmeTarihi = models.DateTimeField(auto_now_add=True,verbose_name="Oluşturulma Tarihi")
+    def __str__(self):
+        return self.sehirAdi
+    class Meta:
+        ordering = ['-sehirAdi']
+
+class Ilce(models.Model):
+    sehir = models.ForeignKey(Sehir,on_delete = models.CASCADE,related_name="SehirIlce")
+    ilceAdi = models.CharField(max_length = 30,null=False,blank=False, verbose_name="İlçe Adı")
+    eklenmeTarihi = models.DateTimeField(auto_now_add=True,verbose_name="Oluşturulma Tarihi")
+    def __str__(self):
+        return self.ilceAdi
+    class Meta:
+        ordering = ['-eklenmeTarihi']
+
+class Mahalle(models.Model):
+    ilce = models.ForeignKey(Ilce,on_delete = models.CASCADE,related_name="MahalleIlce")
+    mahalleAdi = models.CharField(max_length = 30,null=False,blank=False, verbose_name="Mahalle Adı")
+    eklenmeTarihi = models.DateTimeField(auto_now_add=True,verbose_name="Oluşturulma Tarihi")
+    def __str__(self):
+        return self.mahalleAdi
+    class Meta:
+        ordering = ['-eklenmeTarihi']
+
+class Sokak(models.Model):
+    mahalle = models.ForeignKey(Mahalle,on_delete = models.CASCADE,related_name="SokakMahalle")
+    sokakAdi = models.CharField(max_length = 30,null=False,blank=False, verbose_name="Sokak Adı")
+    eklenmeTarihi = models.DateTimeField(auto_now_add=True,verbose_name="Oluşturulma Tarihi")
+    def __str__(self):
+        return self.sokakAdi
+    class Meta:
+        ordering = ['-eklenmeTarihi']
+
+class Cadde(models.Model):
+    sokak = models.ForeignKey(Sokak,on_delete = models.CASCADE,related_name="CaddeSokak")
+    caddeAdi = models.CharField(max_length = 30,null=False,blank=False, verbose_name="Cadde Adı")
+    eklenmeTarihi = models.DateTimeField(auto_now_add=True,verbose_name="Oluşturulma Tarihi")
+    def __str__(self):
+        return self.caddeAdi
+    class Meta:
+        ordering = ['-eklenmeTarihi']
+
 class SaglikKuruluslari(models.Model):
     author = models.ForeignKey("auth.User",on_delete = models.CASCADE,verbose_name = "Ekleyen")
     kurulusAdi = models.CharField(max_length = 50,null=False,blank=False,verbose_name = "Kuruluş Adı")
     kurulusTuru =models.CharField(max_length=20,null=False,blank=False, choices=kurulusTurleri, verbose_name = "Kuruluş Türü")
     durum =models.CharField(max_length = 20,null=False,blank=False, choices=durumlar, verbose_name = "Durum")
-    #sehir = models.CharField(max_length = 50,null=False,blank=False,verbose_name = "Şehir")
-    #ilce = models.CharField(max_length = 50,null=False,blank=False,verbose_name = "İlçe")
-    #mahalle = models.CharField(max_length = 50,null=False,blank=False,verbose_name = "Mahalle")
-    ### DEĞİŞECEK
-    #sokak = models.CharField(max_length = 50,null=False,blank=False,verbose_name = "Sokak")
-    ###
-    #cadde = models.CharField(max_length = 50,null=False,blank=False,verbose_name = "Cadde")
-    #kapıNo = models.PositiveIntegerField(null=False,blank=False,verbose_name = "Kapı No")
-    #tamAdres = models.CharField(max_length = 150,null=False,blank=False,verbose_name = "Tam Adres")
-    #postaKodu = models.PositiveIntegerField(null=False,blank=False,verbose_name = "Posta Kodu")
+    sehir = models.ForeignKey(Sehir,null=True, on_delete = models.CASCADE,related_name="SaglikKurulusSehir")
+    ilce = models.ForeignKey(Ilce,null=True, on_delete = models.CASCADE,related_name="SaglikKurulusIlce")
+    mahalle = models.ForeignKey(Mahalle,null=True, on_delete = models.CASCADE,related_name="SaglikKurulusMahalle")
+    sokak = models.ForeignKey(Sokak,null=True, on_delete = models.CASCADE,related_name="SaglikKurulusSokak")
+    cadde = models.ForeignKey(Cadde,null=True, on_delete = models.CASCADE,related_name="SaglikKurulusCadde")
+    kapiNo = models.PositiveIntegerField(null=True,verbose_name = "Kapı No")
+    tamAdres = models.CharField(max_length = 250,null=True,verbose_name = "Tam Adres")
+    postaKodu = models.PositiveIntegerField(null=True,verbose_name = "Posta Kodu")
     enlem = models.FloatField(max_length = 50,null=False,blank=False,verbose_name = "Enlem")
     boylam = models.FloatField(max_length = 50,null=False,blank=False,verbose_name = "Boylam")
-    
-    #telefon = models.PositiveIntegerField(null=False,blank=False,verbose_name = "Telefon")
-    #fax = models.PositiveIntegerField(null=False,blank=False,verbose_name = "Fax")
-    #website = models.CharField(max_length = 50,null=False,blank=False,verbose_name = "Website")
-    #mail = models.EmailField(max_length = 50,null=False,blank=False,verbose_name = "Mail")
-    #doktorSayisi = models.PositiveIntegerField(null=False,blank=False,verbose_name = "Doktor Sayısı")
-    #kurulusNotu = models.CharField(verbose_name="Yorumunuz.. (En fazla 1000 karakter)",null=True,max_length=1000)
+    telefon = models.PositiveIntegerField(null=False,blank=False,verbose_name = "Telefon")
+    fax = models.PositiveIntegerField(verbose_name = "Fax")
+    website = models.CharField(max_length = 50,verbose_name = "Website")
+    mail = models.EmailField(max_length = 50,verbose_name = "Mail")
+    doktorSayisi = models.PositiveIntegerField(verbose_name = "Doktor Sayısı")
+    kisiUzaklik = models.FloatField(max_length = 500,null= True, verbose_name="Kişiye Olan Uzaklık")
     eklenmeTarihi = models.DateTimeField(auto_now_add=True,verbose_name="Oluşturulma Tarihi")
     def __str__(self):
         return self.kurulusAdi
     class Meta:
         ordering = ['-eklenmeTarihi']
+        
+    
+
+
     
 
 class Hizmetler(models.Model):
@@ -89,7 +143,7 @@ class Kisiler(models.Model):
     instagram = models.CharField(max_length = 50,verbose_name = "Instagram")
 
     ## DEĞİŞECEK
-    memleket = models.CharField(max_length = 50,verbose_name = "LinkedIn")
+    #memleket = models.CharField(max_length = 50,verbose_name = "LinkedIn")
     ##
     eklenmeTarihi = models.DateTimeField(auto_now_add=True,verbose_name="Oluşturulma Tarihi")
     def __str__(self):
@@ -145,6 +199,14 @@ class Seviyeler(models.Model):
     class Meta:
         ordering = ['-eklenmeTarihi']
 
+
+class UserExtra(models.Model):
+    user= models.ForeignKey("auth.User",on_delete = models.CASCADE,verbose_name = "Kullanıcı")
+    latitude = models.FloatField(null=True, default=None, verbose_name="Enlem")
+    longitude = models.FloatField(null=True, default=None, verbose_name="Boylam")
+    seviye = models.ForeignKey(Seviyeler, null=True ,on_delete = models.CASCADE,related_name="UserExtraSeviye")
+    def __str__(self):
+        return self.user
 
 class Personeller(models.Model):
     ad = models.CharField(max_length = 50,null=False,blank=False,verbose_name = "Ad")
